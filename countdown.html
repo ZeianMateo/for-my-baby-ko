@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>🕔 Countdown to 1st Monthsary</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(to right, #fffafc, #ffe0ec);
+      text-align: center;
+      padding: 50px;
+      color: #e91e63;
+    }
+    h1 {
+      font-size: 28px;
+      margin-bottom: 20px;
+    }
+    #countdown {
+      font-size: 24px;
+      margin-top: 10px;
+    }
+    .back-btn {
+      display: inline-block;
+      margin-top: 30px;
+      background: #f06292;
+      color: white;
+      padding: 8px 16px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 14px;
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+  <h1>⏳ Countdown to our 1st Monthsary - May 21, 2026</h1>
+  <div id="countdown"></div>
+  <a href="index.html" class="back-btn">← Back to Diary</a>
+
+  <script>
+    const targetDate = new Date("May 21, " + (new Date().getMonth() >= 4 ? new Date().getFullYear() + 1 : new Date().getFullYear()) + " 00:00:00").getTime();
+    const countdown = document.getElementById("countdown");
+
+    function updateCountdown() {
+      const now = new Date().getTime();
+      const distance = targetDate - now;
+      if (distance < 0) {
+        countdown.innerHTML = "🎉 Happy Monthsary!";
+        return;
+      }
+      const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+      countdown.innerHTML = `${days}d ${hours}h ${minutes}m ${seconds}s`;
+    }
+
+    setInterval(updateCountdown, 1000);
+    updateCountdown();
+  </script>
+</body>
+</html>

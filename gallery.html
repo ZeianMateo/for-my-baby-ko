@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>📸 Gallery</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #fff0f7;
+      color: #d81b60;
+      padding: 20px;
+      text-align: center;
+    }
+    input[type="file"] {
+      margin-top: 10px;
+      padding: 10px;
+      border-radius: 8px;
+      font-size: 16px;
+      border: 1px solid #ffc0cb;
+    }
+    .btn {
+      margin-top: 10px;
+      padding: 10px 16px;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      background-color: #f06292;
+      color: white;
+      cursor: pointer;
+    }
+    .btn:hover {
+      background-color: #ec407a;
+    }
+    img {
+      margin-top: 10px;
+      max-width: 100%;
+      border-radius: 10px;
+    }
+    .images {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: center;
+      margin-top: 20px;
+    }
+    a {
+      display: inline-block;
+      margin-top: 20px;
+      color: #d81b60;
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+  <h1>📸 Shared Gallery</h1>
+  <p>Upload your favorite memories together 💖</p>
+  <input type="file" id="upload" accept="image/*">
+  <button class="btn" onclick="addImage()">Upload</button>
+  <div class="images" id="gallery"></div>
+  <a href="index.html" class="btn">← Back to Diary</a>
+
+  <script>
+    function addImage() {
+      const file = document.getElementById("upload").files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = function (e) {
+        const imgHTML = `<img src="${e.target.result}" width="200">`;
+        document.getElementById("gallery").insertAdjacentHTML("beforeend", imgHTML);
+        localStorage.setItem("galleryImages", document.getElementById("gallery").innerHTML);
+      };
+      reader.readAsDataURL(file);
+    }
+    window.onload = function () {
+      document.getElementById("gallery").innerHTML = localStorage.getItem("galleryImages") || "";
+    };
+  </script>
+</body>
+</html>

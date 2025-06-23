@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>🤝 Promises</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #fffafc;
+      color: #d81b60;
+      padding: 30px;
+    }
+    input {
+      padding: 10px;
+      font-size: 16px;
+      border-radius: 10px;
+      border: 1px solid #ffc0cb;
+      width: 70%;
+    }
+    button {
+      padding: 10px;
+      font-size: 16px;
+      border-radius: 10px;
+      border: none;
+      background-color: #ff80ab;
+      color: white;
+      margin-left: 10px;
+      cursor: pointer;
+    }
+    ul {
+      margin-top: 20px;
+    }
+    li {
+      margin-bottom: 10px;
+      position: relative;
+      padding-right: 100px;
+    }
+    .reaction-bar {
+      display: none;
+      position: absolute;
+      top: 0;
+      left: 30px;
+      background: #fff0f5;
+      border: 1px solid #ffc0cb;
+      border-radius: 8px;
+      padding: 5px;
+    }
+    .reaction-bar span {
+      cursor: pointer;
+      font-size: 18px;
+      margin: 0 5px;
+    }
+    .delete-btn {
+      position: absolute;
+      right: 0;
+      top: 0;
+      background: none;
+      border: none;
+      color: red;
+      cursor: pointer;
+      font-size: 16px;
+    }
+    .back-btn {
+      display: inline-block;
+      margin-top: 30px;
+      background: #f06292;
+      color: white;
+      padding: 8px 16px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 14px;
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+  <h1>🤝 Promises to Keep Forever</h1>
+  <input type="text" id="promiseText" placeholder="Write a promise...">
+  <button onclick="addPromise()">Add</button>
+  <ul id="promiseList"></ul>
+  <a href="index.html" class="back-btn">← Back to Diary</a>
+
+  <script>
+    function addPromise() {
+      const text = document.getElementById("promiseText").value.trim();
+      if (!text) return;
+      const li = document.createElement("li");
+      li.innerHTML = `💖 ${text} 
+        <button class="delete-btn" onclick="deletePromise(this)">🗑</button>
+        <div class="reaction-bar">
+          <span onclick="react(this)">❤️</span>
+          <span onclick="react(this)">😍</span>
+          <span onclick="react(this)">😭</span>
+          <span onclick="react(this)">✨</span>
+        </div>`;
+      li.onmouseenter = () => li.querySelector('.reaction-bar').style.display = 'block';
+      li.onmouseleave = () => li.querySelector('.reaction-bar').style.display = 'none';
+      document.getElementById("promiseList").appendChild(li);
+      document.getElementById("promiseText").value = "";
+      savePromises();
+    }
+
+    function deletePromise(btn) {
+      btn.parentElement.remove();
+      savePromises();
+    }
+
+    function react(el) {
+      el.style.transform = "scale(1.3)";
+      setTimeout(() => { el.style.transform = "scale(1)"; }, 300);
+    }
+
+    function savePromises() {
+      localStorage.setItem("promises", document.getElementById("promiseList").innerHTML);
+    }
+
+    window.onload = () => {
+      localStorage.removeItem("promises"); // optional clear
+      document.getElementById("promiseList").innerHTML = localStorage.getItem("promises") || "";
+    };
+  </script>
+</body>
+</html>

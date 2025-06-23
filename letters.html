@@ -1,0 +1,171 @@
+<!DOCTYPE html><html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>💌 Letters</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #fff0f5;
+      padding: 20px;
+      color: #880e4f;
+    }
+    h2 {
+      text-align: center;
+      color: #e91e63;
+    }
+    textarea, input[type="text"], input[type="file"] {
+      width: 100%;
+      margin-top: 10px;
+      padding: 10px;
+      border-radius: 8px;
+      border: 1px solid #ffb6c1;
+      background: #fff;
+      font-size: 16px;
+    }
+    button {
+      margin-top: 10px;
+      background-color: #f06292;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      padding: 10px 20px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+    .entry {
+      background-color: #ffe6eb;
+      padding: 10px;
+      margin-top: 15px;
+      border-left: 5px solid #e91e63;
+      border-radius: 10px;
+      position: relative;
+    }
+    .date {
+      font-weight: bold;
+      color: #c2185b;
+    }
+    .from {
+      font-style: italic;
+      color: #ad1457;
+      margin-bottom: 5px;
+    }
+    .reactions {
+      margin-top: 5px;
+      position: relative;
+    }
+    .reaction-btn {
+      cursor: pointer;
+      margin-right: 5px;
+      font-size: 18px;
+    }
+    .reaction-picker {
+      display: none;
+      position: absolute;
+      bottom: 30px;
+      left: 0;
+      background: white;
+      border: 1px solid #ccc;
+      padding: 5px;
+      border-radius: 8px;
+    }
+    .reaction-picker span {
+      font-size: 20px;
+      margin: 3px;
+      cursor: pointer;
+    }
+    .delete-btn {
+      position: absolute;
+      top: 8px;
+      right: 10px;
+      background: none;
+      color: red;
+      border: none;
+      font-size: 14px;
+      cursor: pointer;
+    }
+    .back-btn {
+      display: inline-block;
+      margin-top: 30px;
+      background: #f06292;
+      color: white;
+      padding: 8px 16px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 14px;
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+  <h2>💌 Our Sweet Letters</h2>
+  <input type="text" id="letterName" placeholder="Your name">
+  <textarea id="letterText" placeholder="Write your heartfelt letter..."></textarea>
+  <input type="file" id="letterImage" accept="image/*">
+  <button onclick="addLetter()">Add Letter</button>
+  <div id="letterEntries"></div>
+  <button class="back-btn" onclick="window.location.href='index.html'">← Back to Diary</button>
+  <script>
+    function addLetter() {
+      const name = document.getElementById("letterName").value || "Anonymous";
+      const text = document.getElementById("letterText").value.trim();
+      const imageFile = document.getElementById("letterImage").files[0];
+      if (!text) return;
+
+      const reader = new FileReader();
+      reader.onload = function (e) {
+        const imageHTML = imageFile ? `<img src="${e.target.result}" style="max-width:100%; margin-top:10px; border-radius:10px;">` : "";
+        const now = new Date().toLocaleString();
+        const id = Date.now();
+        const letterHTML = `
+          <div class="entry" id="entry-${id}">
+            <button class="delete-btn" onclick="deleteLetter('entry-${id}')">🗑</button>
+            <div class="date">${now}</div>
+            <div class="from">❤️ From: ${name}</div>
+            <p>${text}</p>
+            ${imageHTML}
+            <div class="reactions">
+              <span class="reaction-btn" onclick="togglePicker(this)">👍</span>
+              <div class="reaction-picker">
+                <span onclick="react(this, '❤️')">❤️</span>
+                <span onclick="react(this, '😍')">😍</span>
+                <span onclick="react(this, '😭')">😭</span>
+                <span onclick="react(this, '✨')">✨</span>
+              </div>
+            </div>
+          </div>`;
+        const container = document.getElementById("letterEntries");
+        container.insertAdjacentHTML("afterbegin", letterHTML);
+        localStorage.setItem("lettersEntries", container.innerHTML);
+        document.getElementById("letterName").value = "";
+        document.getElementById("letterText").value = "";
+        document.getElementById("letterImage").value = "";
+      };
+      if (imageFile) reader.readAsDataURL(imageFile);
+      else reader.onload();
+    }
+
+    function togglePicker(el) {
+      const picker = el.nextElementSibling;
+      picker.style.display = picker.style.display === "block" ? "none" : "block";
+    }
+
+    function react(el, emoji) {
+      const picker = el.parentElement;
+      const btn = picker.previousElementSibling;
+      btn.textContent = emoji;
+      picker.style.display = "none";
+    }
+
+    function deleteLetter(id) {
+      const entry = document.getElementById(id);
+      entry.remove();
+      localStorage.setItem("lettersEntries", document.getElementById("letterEntries").innerHTML);
+    }
+
+    window.onload = function () {
+      document.getElementById("letterEntries").innerHTML = localStorage.getItem("lettersEntries") || "";
+    };
+  </script></body>
+</html>
