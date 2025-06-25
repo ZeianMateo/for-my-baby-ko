@@ -29,11 +29,16 @@
     }
     ul {
       margin-top: 20px;
+      padding: 0;
     }
     li {
+      list-style: none;
       margin-bottom: 10px;
       position: relative;
       padding-right: 100px;
+      background: #ffe6eb;
+      padding: 10px;
+      border-radius: 8px;
     }
     .reaction-bar {
       display: none;
@@ -52,8 +57,8 @@
     }
     .delete-btn {
       position: absolute;
-      right: 0;
-      top: 0;
+      right: 10px;
+      top: 8px;
       background: none;
       border: none;
       color: red;
@@ -81,13 +86,38 @@
   <ul id="promiseList"></ul>
   <a href="index.html" class="back-btn">← Back to Diary</a>
 
-  <script>
-    function addPromise() {
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-app.js";
+    import { getFirestore, collection, addDoc, deleteDoc, doc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyCFRosG2qX4V7-Q-L3K_kc0f1-N8MVE3js",
+      authDomain: "virtual-diary-48315.firebaseapp.com",
+      projectId: "virtual-diary-48315",
+      storageBucket: "virtual-diary-48315.appspot.com",
+      messagingSenderId: "1061903300547",
+      appId: "1:1061903300547:web:3353b4504768f9cece2f76",
+      measurementId: "G-3SLZEGH16W"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    async function addPromise() {
       const text = document.getElementById("promiseText").value.trim();
       if (!text) return;
+      await addDoc(collection(db, "promises"), {
+        text,
+        created: new Date().toISOString()
+      });
+      document.getElementById("promiseText").value = "";
+    }
+
+    function renderPromise(id, text) {
       const li = document.createElement("li");
-      li.innerHTML = `💖 ${text} 
-        <button class="delete-btn" onclick="deletePromise(this)">🗑</button>
+      li.innerHTML = `
+        💖 ${text}
+        <button class="delete-btn" onclick="deletePromise('${id}')">🗑</button>
         <div class="reaction-bar">
           <span onclick="react(this)">❤️</span>
           <span onclick="react(this)">😍</span>
@@ -97,28 +127,22 @@
       li.onmouseenter = () => li.querySelector('.reaction-bar').style.display = 'block';
       li.onmouseleave = () => li.querySelector('.reaction-bar').style.display = 'none';
       document.getElementById("promiseList").appendChild(li);
-      document.getElementById("promiseText").value = "";
-      savePromises();
     }
 
-    function deletePromise(btn) {
-      btn.parentElement.remove();
-      savePromises();
-    }
-
-    function react(el) {
-      el.style.transform = "scale(1.3)";
-      setTimeout(() => { el.style.transform = "scale(1)"; }, 300);
-    }
-
-    function savePromises() {
-      localStorage.setItem("promises", document.getElementById("promiseList").innerHTML);
-    }
-
-    window.onload = () => {
-      localStorage.removeItem("promises"); // optional clear
-      document.getElementById("promiseList").innerHTML = localStorage.getItem("promises") || "";
+    window.deletePromise = async function (id) {
+      await deleteDoc(doc(db, "promises", id));
     };
+
+    window.react = function (el) {
+      el.style.transform = "scale(1.3)";
+      setTimeout(() => el.style.transform = "scale(1)", 300);
+    };
+
+    // Load all promises
+    onSnapshot(collection(db, "promises"), (snapshot) => {
+      document.getElementById("promiseList").innerHTML = "";
+      snapshot.forEach(doc => renderPromise(doc.id, doc.data().text));
+    });
   </script>
 </body>
 </html>
