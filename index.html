@@ -4,128 +4,142 @@
   <title>💖 Our Love Diary</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
-    body {
-      font-family: 'Segoe UI', sans-serif;
-      background: linear-gradient(to right, #ffe4ec, #ffd1e3);
-      margin: 0; padding: 0;
-    }
-    header {
-      background-color: #ff94c2;
-      color: white;
-      padding: 15px 20px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-    header h1 { margin: 0; font-size: 22px; }
-    .menu-btn {
-      font-size: 24px;
-      background: none;
-      border: none;
-      color: white;
-      cursor: pointer;
-    }
-    .menu {
-      display: none;
-      position: absolute;
-      top: 60px;
-      right: 20px;
-      background: #fff0f7;
-      border-radius: 10px;
-      padding: 15px;
-    }
-    .menu a {
-      display: block;
-      color: #e91e63;
-      margin-bottom: 10px;
-      text-decoration: none;
-      cursor: pointer;
-    }
-    textarea, input[type="text"], input[type="file"] {
-      width: 100%;
-      margin-top: 10px;
-      padding: 10px;
-      border: 1px solid #ffb6c1;
-      border-radius: 8px;
-      font-size: 16px;
-      background: #fff0f5;
-    }
-    button {
-      margin-top: 10px;
-      background-color: #e91e63;
-      color: white;
-      border: none;
-      border-radius: 8px;
-      padding: 10px 20px;
-      cursor: pointer;
-      font-size: 16px;
-    }
-    .entry {
-      background-color: #ffe6eb;
-      padding: 10px;
-      margin-top: 15px;
-      border-left: 5px solid #e91e63;
-      border-radius: 10px;
-    }
-    .date {
-      font-weight: bold;
-      color: #c2185b;
-    }
-    .from {
-      font-style: italic;
-      margin-bottom: 5px;
-      color: #ad1457;
-    }
-    .reactions {
-      margin-top: 5px;
-    }
-    .reaction-btn {
-      cursor: pointer;
-      margin-right: 5px;
-      font-size: 18px;
-    }
-    .delete-btn {
-      background: none;
-      color: red;
-      border: none;
-      float: right;
-      font-size: 14px;
-      cursor: pointer;
-    }
-    footer {
-      text-align: center;
-      padding: 10px;
-      font-size: 13px;
-      color: #b93a62;
-    }
-    #lockScreen {
-      position: fixed;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background: rgba(255, 240, 245, 0.95);
-      z-index: 999;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-    }
-    #lockScreen input {
-      font-size: 20px;
-      text-align: center;
-      width: 160px;
-      padding: 10px;
-      border-radius: 8px;
-      border: 1px solid #e91e63;
-      margin-bottom: 10px;
-    }
+<style>
+  body {
+    font-family: 'Segoe UI', sans-serif;
+    background: linear-gradient(to right, #ffe4ec, #ffd1e3);
+    margin: 0; padding: 0;
+  }
+  header {
+    background-color: #ff94c2;
+    color: white;
+    padding: 15px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  header h1 {
+    margin: 0;
+    font-size: 22px;
+  }
+  .menu-btn {
+    font-size: 24px;
+    background: none;
+    border: none;
+    color: white;
+    cursor: pointer;
+  }
+  .menu {
+    display: none;
+    position: absolute;
+    top: 60px;
+    right: 20px;
+    background: #fff0f7;
+    border-radius: 10px;
+    padding: 15px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  }
+  .menu a {
+    display: block;
+    color: #e91e63;
+    margin-bottom: 10px;
+    text-decoration: none;
+    font-weight: 500;
+  }
+  textarea, input[type="text"], input[type="file"] {
+    width: 100%;
+    margin-top: 10px;
+    padding: 10px;
+    border: 1px solid #ffb6c1;
+    border-radius: 8px;
+    font-size: 16px;
+    background: #fff0f5;
+  }
+  button {
+    margin-top: 10px;
+    background-color: #e91e63;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 20px;
+    cursor: pointer;
+    font-size: 16px;
+  }
+  .entry {
+    background-color: #ffe6eb;
+    padding: 10px;
+    margin-top: 15px;
+    border-left: 5px solid #e91e63;
+    border-radius: 10px;
+  }
+  .date {
+    font-weight: bold;
+    color: #c2185b;
+  }
+  .from {
+    font-style: italic;
+    margin-bottom: 5px;
+    color: #ad1457;
+  }
+  .reactions {
+    margin-top: 5px;
+  }
+  .reaction-btn {
+    cursor: pointer;
+    margin-right: 5px;
+    font-size: 18px;
+  }
+  .reaction-picker {
+    display: none;
+    margin-top: 5px;
+  }
+  .reaction-picker span {
+    margin-right: 5px;
+    cursor: pointer;
+  }
+  .delete-btn {
+    background: none;
+    color: red;
+    border: none;
+    float: right;
+    font-size: 14px;
+    cursor: pointer;
+  }
+  footer {
+    text-align: center;
+    padding: 10px;
+    font-size: 13px;
+    color: #b93a62;
+  }
+  #lockScreen {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(255, 240, 245, 0.95);
+    z-index: 999;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+  #lockScreen input {
+    font-size: 20px;
+    text-align: center;
+    width: 160px;
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #e91e63;
+    margin-bottom: 10px;
+  }
+</style>
   </style>
 </head>
 <body>
+  <!-- Lock Screen -->
   <div id="lockScreen">
     <h2>🔐 Enter 6-digit Passcode</h2>
     <input type="password" id="passcodeInput" maxlength="6" placeholder="••••••">
     <button onclick="unlockDiary()">Unlock</button>
-  </div>
-  <header>
+  </div>  <!-- Main Content -->  <header>
     <h1>Virtual Love Diary</h1>
     <button class="menu-btn" onclick="toggleMenu()">☰</button>
     <div class="menu" id="menu">
@@ -133,120 +147,104 @@
       <a href="playlist.html">🎵 Playlist</a>
       <a href="gallery.html">🖼 Gallery</a>
       <a href="promises.html">🤝 Promises</a>
-     </div>
-  </header>
-  <main id="mainContent">
+    </div>
+  </header>  <main id="mainContent">
     <input type="text" id="entryName" placeholder="Your name (e.g., Tol or Shermaine)">
     <textarea id="entryText" placeholder="Type your sweet diary entry here..."></textarea>
     <input type="file" id="entryImage" accept="image/*">
     <button onclick="addEntry()">Add Entry</button>
     <div id="entries"></div>
-  </main>
-  <footer>
+  </main>  <footer>
     Made with 💘 by You & Shermaine
-  </footer>
-  <script>
-    const CORRECT_PASS = "312554";document.addEventListener("DOMContentLoaded", () => {
-  if (sessionStorage.getItem("unlockedDiary") === "true") {
-    document.getElementById("lockScreen").style.display = "none";
-  }
-});
+  </footer>  <!-- Firebase SDK -->  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-app.js";
+    import { getFirestore, collection, addDoc, onSnapshot, query, orderBy } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-firestore.js";
+    import { getMessaging, getToken, onMessage } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-messaging.js";
 
-function unlockDiary() {
-  const code = document.getElementById("passcodeInput").value;
-  if (code === CORRECT_PASS) {
-    sessionStorage.setItem("unlockedDiary", "true");
-    document.getElementById("lockScreen").style.display = "none";
-  } else {
-    alert("❌ Wrong passcode. Try again.");
-  }
-}
+    const firebaseConfig = {
+      apiKey: "AIzaSyCFRosG2qX4V7-Q-L3K_kc0f1-N8MVE3js",
+      authDomain: "virtual-diary-48315.firebaseapp.com",
+      projectId: "virtual-diary-48315",
+      storageBucket: "virtual-diary-48315.appspot.com",
+      messagingSenderId: "1061903300547",
+      appId: "1:1061903300547:web:3353b4504768f9cece2f76",
+      measurementId: "G-3SLZEGH16W"
+    };
 
-function toggleMenu() {
-  const menu = document.getElementById("menu");
-  menu.style.display = menu.style.display === "block" ? "none" : "block";
-}
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
 
-function addEntry() {
-  const name = document.getElementById("entryName").value || "Anonymous";
-  const text = document.getElementById("entryText").value.trim();
-  const imageFile = document.getElementById("entryImage").files[0];
-  if (!text) return;
-
-  const reader = new FileReader();
-  reader.onload = function (e) {
-    const imageHTML = imageFile ? `<img src="${e.target.result}" style="max-width:100%; margin-top:10px; border-radius:10px;">` : "";
-    const now = new Date().toLocaleString();
-    const id = Date.now();
-    const entryHTML = `
-      <div class="entry" id="entry-${id}">
-        <button class="delete-btn" onclick="deleteEntry('entry-${id}')">🗑</button>
-        <div class="date">${now}</div>
-        <div class="from">❤️ From: ${name}</div>
-        <p>${text}</p>
-        ${imageHTML}
-        <div class="reactions">
-          <span class="reaction-btn" onclick="togglePicker(this)">👍</span>
-          <div class="reaction-picker" style="display:none;">
-            <span onclick="react(this, '❤️')">❤️</span>
-            <span onclick="react(this, '😍')">😍</span>
-            <span onclick="react(this, '😭')">😭</span>
-            <span onclick="react(this, '✨')">✨</span>
-          </div>
-        </div>
-      </div>`;
-    const container = document.getElementById("entries");
-    container.insertAdjacentHTML("afterbegin", entryHTML);
-    localStorage.setItem("diaryEntries", container.innerHTML);
-    document.getElementById("entryName").value = "";
-    document.getElementById("entryText").value = "";
-    document.getElementById("entryImage").value = "";
-  };
-  if (imageFile) reader.readAsDataURL(imageFile);
-  else reader.onload();
-}
-
-function togglePicker(el) {
-  const picker = el.nextElementSibling;
-  picker.style.display = picker.style.display === "block" ? "none" : "block";
-}
-
-function react(el, emoji) {
-  const picker = el.parentElement;
-  const btn = picker.previousElementSibling;
-  btn.textContent = emoji;
-  picker.style.display = "none";
-}
-
-function deleteEntry(id) {
-  const entry = document.getElementById(id);
-  entry.remove();
-  localStorage.setItem("diaryEntries", document.getElementById("entries").innerHTML);
-}
-
-function checkReminder() {
-  if (!("Notification" in window)) return;
-  if (Notification.permission === "granted") {
-    const last = localStorage.getItem("lastReminder") || 0;
-    const now = Date.now();
-    if (now - last > 4 * 60 * 60 * 1000) {
-      const entryToday = localStorage.getItem("diaryEntries")?.includes(new Date().toLocaleDateString());
-      if (!entryToday) {
-        new Notification("💖 Hey love, don’t forget to write in our diary today!");
-        localStorage.setItem("lastReminder", now);
-      }
+    // Lock Screen
+    const CORRECT_PASS = "312554";
+    if (sessionStorage.getItem("unlockedDiary") === "true") {
+      document.getElementById("lockScreen").style.display = "none";
     }
-  } else if (Notification.permission !== "denied") {
-    Notification.requestPermission();
-  }
-}
 
-window.onload = function () {
-  document.getElementById("entries").innerHTML = localStorage.getItem("diaryEntries") || "";
-  setInterval(checkReminder, 60 * 60 * 1000);
-  checkReminder();
-};
+    window.unlockDiary = function () {
+      const code = document.getElementById("passcodeInput").value;
+      if (code === CORRECT_PASS) {
+        sessionStorage.setItem("unlockedDiary", "true");
+        document.getElementById("lockScreen").style.display = "none";
+      } else {
+        alert("❌ Wrong passcode. Try again.");
+      }
+    };
 
-  </script>
-</body>
+    window.toggleMenu = function () {
+      const menu = document.getElementById("menu");
+      menu.style.display = menu.style.display === "block" ? "none" : "block";
+    };
+
+    // Add entry to Firestore
+    window.addEntry = async function () {
+      const name = document.getElementById("entryName").value || "Anonymous";
+      const text = document.getElementById("entryText").value.trim();
+      const imageFile = document.getElementById("entryImage").files[0];
+      if (!text) return;
+
+      let imageData = "";
+      if (imageFile) {
+        const reader = new FileReader();
+        reader.onload = async function (e) {
+          imageData = e.target.result;
+          await saveEntry(name, text, imageData);
+        };
+        reader.readAsDataURL(imageFile);
+      } else {
+        await saveEntry(name, text, imageData);
+      }
+    };
+
+    async function saveEntry(name, text, imageData) {
+      await addDoc(collection(db, "diaryEntries"), {
+        name,
+        text,
+        image: imageData,
+        date: new Date().toLocaleString()
+      });
+      document.getElementById("entryName").value = "";
+      document.getElementById("entryText").value = "";
+      document.getElementById("entryImage").value = "";
+      Notification.requestPermission();
+    }
+
+    function displayEntry(data) {
+      const { name, text, image, date } = data;
+      const entryHTML = `
+        <div class="entry">
+          <div class="date">${date}</div>
+          <div class="from">❤️ From: ${name}</div>
+          <p>${text}</p>
+          ${image ? `<img src="${image}" style="max-width:100%; margin-top:10px; border-radius:10px;">` : ""}
+        </div>`;
+      document.getElementById("entries").insertAdjacentHTML("afterbegin", entryHTML);
+    }
+
+    // Realtime update
+    const q = query(collection(db, "diaryEntries"), orderBy("date", "desc"));
+    onSnapshot(q, (snapshot) => {
+      document.getElementById("entries").innerHTML = "";
+      snapshot.forEach(doc => displayEntry(doc.data()));
+    });
+  </script></body>
 </html>
