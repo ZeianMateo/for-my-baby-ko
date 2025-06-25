@@ -1,5 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE html><html lang="en">
 <head>
   <meta charset="UTF-8">
   <title>💖 Our Love Diary</title>
@@ -71,6 +70,7 @@
       margin-top: 15px;
       border-left: 5px solid #e91e63;
       border-radius: 10px;
+      position: relative;
     }
     .date {
       font-weight: bold;
@@ -80,6 +80,16 @@
       font-style: italic;
       margin-bottom: 5px;
       color: #ad1457;
+    }
+    .delete-btn {
+      background: none;
+      color: red;
+      border: none;
+      font-size: 14px;
+      position: absolute;
+      top: 5px;
+      right: 10px;
+      cursor: pointer;
     }
     footer {
       text-align: center;
@@ -113,9 +123,7 @@
     <h2>🔐 Enter 6-digit Passcode</h2>
     <input type="password" id="passcodeInput" maxlength="6" placeholder="••••••">
     <button onclick="unlockDiary()">Unlock</button>
-  </div>
-
-  <header>
+  </div>  <header>
     <h1>Virtual Love Diary</h1>
     <button class="menu-btn" onclick="toggleMenu()">☰</button>
     <div class="menu" id="menu">
@@ -124,23 +132,17 @@
       <a href="gallery.html">🖼 Gallery</a>
       <a href="promises.html">🤝 Promises</a>
     </div>
-  </header>
-
-  <main id="mainContent">
+  </header>  <main id="mainContent">
     <input type="text" id="entryName" placeholder="Your name (e.g., Tol or Shermaine)">
     <textarea id="entryText" placeholder="Type your sweet diary entry here..."></textarea>
     <input type="file" id="entryImage" accept="image/*">
     <button onclick="addEntry()">Add Entry</button>
     <div id="entries"></div>
-  </main>
-
-  <footer>
+  </main>  <footer>
     Made with 💘 by You & Shermaine
-  </footer>
-
-  <script type="module">
+  </footer>  <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-app.js";
-    import { getFirestore, collection, addDoc, onSnapshot, query, orderBy } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-firestore.js";
+    import { getFirestore, collection, addDoc, onSnapshot, query, orderBy, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-firestore.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyCFRosG2qX4V7-Q-L3K_kc0f1-N8MVE3js",
@@ -155,7 +157,6 @@
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
 
-    // Unlock Diary with localStorage
     if (localStorage.getItem("unlockedDiary") === "true") {
       document.getElementById("lockScreen").style.display = "none";
     }
@@ -175,7 +176,6 @@
       menu.style.display = menu.style.display === "block" ? "none" : "block";
     };
 
-    // Add entry
     window.addEntry = async function () {
       const name = document.getElementById("entryName").value || "Anonymous";
       const text = document.getElementById("entryText").value.trim();
@@ -207,10 +207,11 @@
       document.getElementById("entryImage").value = "";
     }
 
-    function displayEntry(data) {
+    function displayEntry(data, id) {
       const { name, text, image, date } = data;
       const entryHTML = `
-        <div class="entry">
+        <div class="entry" id="entry-${id}">
+          <button class="delete-btn" onclick="deleteEntry('${id}')">🗑</button>
           <div class="date">${date}</div>
           <div class="from">❤️ From: ${name}</div>
           <p>${text}</p>
@@ -219,12 +220,16 @@
       document.getElementById("entries").insertAdjacentHTML("afterbegin", entryHTML);
     }
 
-    // Listen to new entries
+    window.deleteEntry = async function(id) {
+      if (confirm("❗ Are you sure you want to delete this entry?")) {
+        await deleteDoc(doc(db, "diaryEntries", id));
+      }
+    };
+
     const q = query(collection(db, "diaryEntries"), orderBy("date", "desc"));
     onSnapshot(q, (snapshot) => {
       document.getElementById("entries").innerHTML = "";
-      snapshot.forEach(doc => displayEntry(doc.data()));
+      snapshot.forEach(doc => displayEntry(doc.data(), doc.id));
     });
-  </script>
-</body>
+  </script></body>
 </html>
