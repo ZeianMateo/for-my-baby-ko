@@ -105,67 +105,97 @@
   <input type="file" id="letterImage" accept="image/*">
   <button onclick="addLetter()">Add Letter</button>
   <div id="letterEntries"></div>
-  <button class="back-btn" onclick="window.location.href='index.html'">← Back to Diary</button>
-  <script>
-    function addLetter() {
+  <button class="back-btn" onclick="window.location.href='index.html'">← Back to Diary</button>  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-app.js";
+    import { getFirestore, collection, addDoc, onSnapshot, query, orderBy, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyCFRosG2qX4V7-Q-L3K_kc0f1-N8MVE3js",
+      authDomain: "virtual-diary-48315.firebaseapp.com",
+      projectId: "virtual-diary-48315",
+      storageBucket: "virtual-diary-48315.appspot.com",
+      messagingSenderId: "1061903300547",
+      appId: "1:1061903300547:web:3353b4504768f9cece2f76"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    window.addLetter = async function () {
       const name = document.getElementById("letterName").value || "Anonymous";
       const text = document.getElementById("letterText").value.trim();
       const imageFile = document.getElementById("letterImage").files[0];
       if (!text) return;
 
-      const reader = new FileReader();
-      reader.onload = function (e) {
-        const imageHTML = imageFile ? `<img src="${e.target.result}" style="max-width:100%; margin-top:10px; border-radius:10px;">` : "";
-        const now = new Date().toLocaleString();
-        const id = Date.now();
-        const letterHTML = `
-          <div class="entry" id="entry-${id}">
-            <button class="delete-btn" onclick="deleteLetter('entry-${id}')">🗑</button>
-            <div class="date">${now}</div>
-            <div class="from">❤️ From: ${name}</div>
-            <p>${text}</p>
-            ${imageHTML}
-            <div class="reactions">
-              <span class="reaction-btn" onclick="togglePicker(this)">👍</span>
-              <div class="reaction-picker">
-                <span onclick="react(this, '❤️')">❤️</span>
-                <span onclick="react(this, '😍')">😍</span>
-                <span onclick="react(this, '😭')">😭</span>
-                <span onclick="react(this, '✨')">✨</span>
-              </div>
-            </div>
-          </div>`;
-        const container = document.getElementById("letterEntries");
-        container.insertAdjacentHTML("afterbegin", letterHTML);
-        localStorage.setItem("lettersEntries", container.innerHTML);
-        document.getElementById("letterName").value = "";
-        document.getElementById("letterText").value = "";
-        document.getElementById("letterImage").value = "";
-      };
-      if (imageFile) reader.readAsDataURL(imageFile);
-      else reader.onload();
+      let imageData = "";
+      if (imageFile) {
+        const reader = new FileReader();
+        reader.onload = async function (e) {
+          imageData = e.target.result;
+          await saveLetter(name, text, imageData);
+        };
+        reader.readAsDataURL(imageFile);
+      } else {
+        await saveLetter(name, text, imageData);
+      }
+    };
+
+    async function saveLetter(name, text, image) {
+      await addDoc(collection(db, "letters"), {
+        name,
+        text,
+        image,
+        date: new Date().toLocaleString()
+      });
+      document.getElementById("letterName").value = "";
+      document.getElementById("letterText").value = "";
+      document.getElementById("letterImage").value = "";
     }
 
-    function togglePicker(el) {
+    function renderLetter(id, data) {
+      const { name, text, image, date } = data;
+      const imageHTML = image ? `<img src="${image}" style="max-width:100%; margin-top:10px; border-radius:10px;">` : "";
+      const html = `
+        <div class="entry" id="entry-${id}">
+          <button class="delete-btn" onclick="deleteLetter('${id}')">🗑</button>
+          <div class="date">${date}</div>
+          <div class="from">❤️ From: ${name}</div>
+          <p>${text}</p>
+          ${imageHTML}
+          <div class="reactions">
+            <span class="reaction-btn" onclick="togglePicker(this)">👍</span>
+            <div class="reaction-picker">
+              <span onclick="react(this, '❤️')">❤️</span>
+              <span onclick="react(this, '😍')">😍</span>
+              <span onclick="react(this, '😭')">😭</span>
+              <span onclick="react(this, '✨')">✨</span>
+            </div>
+          </div>
+        </div>`;
+      document.getElementById("letterEntries").insertAdjacentHTML("beforeend", html);
+    }
+
+    window.togglePicker = function(el) {
       const picker = el.nextElementSibling;
       picker.style.display = picker.style.display === "block" ? "none" : "block";
-    }
+    };
 
-    function react(el, emoji) {
+    window.react = function(el, emoji) {
       const picker = el.parentElement;
       const btn = picker.previousElementSibling;
       btn.textContent = emoji;
       picker.style.display = "none";
-    }
-
-    function deleteLetter(id) {
-      const entry = document.getElementById(id);
-      entry.remove();
-      localStorage.setItem("lettersEntries", document.getElementById("letterEntries").innerHTML);
-    }
-
-    window.onload = function () {
-      document.getElementById("letterEntries").innerHTML = localStorage.getItem("lettersEntries") || "";
     };
+
+    window.deleteLetter = async function(id) {
+      await deleteDoc(doc(db, "letters", id));
+      document.getElementById("entry-" + id)?.remove();
+    };
+
+    const q = query(collection(db, "letters"), orderBy("date", "desc"));
+    onSnapshot(q, snapshot => {
+      document.getElementById("letterEntries").innerHTML = "";
+      snapshot.forEach(doc => renderLetter(doc.id, doc.data()));
+    });
   </script></body>
 </html>
