@@ -1,145 +1,121 @@
-<!DOCTYPE html><html lang="en">
+<!DOCTYPE html>
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <title>💖 Our Love Diary</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
-<style>
-  body {
-    font-family: 'Segoe UI', sans-serif;
-    background: linear-gradient(to right, #ffe4ec, #ffd1e3);
-    margin: 0; padding: 0;
-  }
-  header {
-    background-color: #ff94c2;
-    color: white;
-    padding: 15px 20px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-  header h1 {
-    margin: 0;
-    font-size: 22px;
-  }
-  .menu-btn {
-    font-size: 24px;
-    background: none;
-    border: none;
-    color: white;
-    cursor: pointer;
-  }
-  .menu {
-    display: none;
-    position: absolute;
-    top: 60px;
-    right: 20px;
-    background: #fff0f7;
-    border-radius: 10px;
-    padding: 15px;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-  }
-  .menu a {
-    display: block;
-    color: #e91e63;
-    margin-bottom: 10px;
-    text-decoration: none;
-    font-weight: 500;
-  }
-  textarea, input[type="text"], input[type="file"] {
-    width: 100%;
-    margin-top: 10px;
-    padding: 10px;
-    border: 1px solid #ffb6c1;
-    border-radius: 8px;
-    font-size: 16px;
-    background: #fff0f5;
-  }
-  button {
-    margin-top: 10px;
-    background-color: #e91e63;
-    color: white;
-    border: none;
-    border-radius: 8px;
-    padding: 10px 20px;
-    cursor: pointer;
-    font-size: 16px;
-  }
-  .entry {
-    background-color: #ffe6eb;
-    padding: 10px;
-    margin-top: 15px;
-    border-left: 5px solid #e91e63;
-    border-radius: 10px;
-  }
-  .date {
-    font-weight: bold;
-    color: #c2185b;
-  }
-  .from {
-    font-style: italic;
-    margin-bottom: 5px;
-    color: #ad1457;
-  }
-  .reactions {
-    margin-top: 5px;
-  }
-  .reaction-btn {
-    cursor: pointer;
-    margin-right: 5px;
-    font-size: 18px;
-  }
-  .reaction-picker {
-    display: none;
-    margin-top: 5px;
-  }
-  .reaction-picker span {
-    margin-right: 5px;
-    cursor: pointer;
-  }
-  .delete-btn {
-    background: none;
-    color: red;
-    border: none;
-    float: right;
-    font-size: 14px;
-    cursor: pointer;
-  }
-  footer {
-    text-align: center;
-    padding: 10px;
-    font-size: 13px;
-    color: #b93a62;
-  }
-  #lockScreen {
-    position: fixed;
-    top: 0; left: 0; right: 0; bottom: 0;
-    background: rgba(255, 240, 245, 0.95);
-    z-index: 999;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-  }
-  #lockScreen input {
-    font-size: 20px;
-    text-align: center;
-    width: 160px;
-    padding: 10px;
-    border-radius: 8px;
-    border: 1px solid #e91e63;
-    margin-bottom: 10px;
-  }
-</style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(to right, #ffe4ec, #ffd1e3);
+      margin: 0; padding: 0;
+    }
+    header {
+      background-color: #ff94c2;
+      color: white;
+      padding: 15px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    header h1 {
+      margin: 0;
+      font-size: 22px;
+    }
+    .menu-btn {
+      font-size: 24px;
+      background: none;
+      border: none;
+      color: white;
+      cursor: pointer;
+    }
+    .menu {
+      display: none;
+      position: absolute;
+      top: 60px;
+      right: 20px;
+      background: #fff0f7;
+      border-radius: 10px;
+      padding: 15px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+    .menu a {
+      display: block;
+      color: #e91e63;
+      margin-bottom: 10px;
+      text-decoration: none;
+      font-weight: 500;
+    }
+    textarea, input[type="text"], input[type="file"] {
+      width: 100%;
+      margin-top: 10px;
+      padding: 10px;
+      border: 1px solid #ffb6c1;
+      border-radius: 8px;
+      font-size: 16px;
+      background: #fff0f5;
+    }
+    button {
+      margin-top: 10px;
+      background-color: #e91e63;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      padding: 10px 20px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+    .entry {
+      background-color: #ffe6eb;
+      padding: 10px;
+      margin-top: 15px;
+      border-left: 5px solid #e91e63;
+      border-radius: 10px;
+    }
+    .date {
+      font-weight: bold;
+      color: #c2185b;
+    }
+    .from {
+      font-style: italic;
+      margin-bottom: 5px;
+      color: #ad1457;
+    }
+    footer {
+      text-align: center;
+      padding: 10px;
+      font-size: 13px;
+      color: #b93a62;
+    }
+    #lockScreen {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(255, 240, 245, 0.95);
+      z-index: 999;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+    #lockScreen input {
+      font-size: 20px;
+      text-align: center;
+      width: 160px;
+      padding: 10px;
+      border-radius: 8px;
+      border: 1px solid #e91e63;
+      margin-bottom: 10px;
+    }
   </style>
 </head>
 <body>
-  <!-- Lock Screen -->
   <div id="lockScreen">
     <h2>🔐 Enter 6-digit Passcode</h2>
     <input type="password" id="passcodeInput" maxlength="6" placeholder="••••••">
     <button onclick="unlockDiary()">Unlock</button>
-  </div>  <!-- Main Content -->  <header>
+  </div>
+
+  <header>
     <h1>Virtual Love Diary</h1>
     <button class="menu-btn" onclick="toggleMenu()">☰</button>
     <div class="menu" id="menu">
@@ -148,18 +124,23 @@
       <a href="gallery.html">🖼 Gallery</a>
       <a href="promises.html">🤝 Promises</a>
     </div>
-  </header>  <main id="mainContent">
+  </header>
+
+  <main id="mainContent">
     <input type="text" id="entryName" placeholder="Your name (e.g., Tol or Shermaine)">
     <textarea id="entryText" placeholder="Type your sweet diary entry here..."></textarea>
     <input type="file" id="entryImage" accept="image/*">
     <button onclick="addEntry()">Add Entry</button>
     <div id="entries"></div>
-  </main>  <footer>
+  </main>
+
+  <footer>
     Made with 💘 by You & Shermaine
-  </footer>  <!-- Firebase SDK -->  <script type="module">
+  </footer>
+
+  <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-app.js";
     import { getFirestore, collection, addDoc, onSnapshot, query, orderBy } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-firestore.js";
-    import { getMessaging, getToken, onMessage } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-messaging.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyCFRosG2qX4V7-Q-L3K_kc0f1-N8MVE3js",
@@ -174,16 +155,15 @@
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
 
-    // Lock Screen
-    const CORRECT_PASS = "312554";
-    if (sessionStorage.getItem("unlockedDiary") === "true") {
+    // Unlock Diary with localStorage
+    if (localStorage.getItem("unlockedDiary") === "true") {
       document.getElementById("lockScreen").style.display = "none";
     }
 
     window.unlockDiary = function () {
       const code = document.getElementById("passcodeInput").value;
-      if (code === CORRECT_PASS) {
-        sessionStorage.setItem("unlockedDiary", "true");
+      if (code === "312554") {
+        localStorage.setItem("unlockedDiary", "true");
         document.getElementById("lockScreen").style.display = "none";
       } else {
         alert("❌ Wrong passcode. Try again.");
@@ -195,7 +175,7 @@
       menu.style.display = menu.style.display === "block" ? "none" : "block";
     };
 
-    // Add entry to Firestore
+    // Add entry
     window.addEntry = async function () {
       const name = document.getElementById("entryName").value || "Anonymous";
       const text = document.getElementById("entryText").value.trim();
@@ -225,7 +205,6 @@
       document.getElementById("entryName").value = "";
       document.getElementById("entryText").value = "";
       document.getElementById("entryImage").value = "";
-      Notification.requestPermission();
     }
 
     function displayEntry(data) {
@@ -240,11 +219,12 @@
       document.getElementById("entries").insertAdjacentHTML("afterbegin", entryHTML);
     }
 
-    // Realtime update
+    // Listen to new entries
     const q = query(collection(db, "diaryEntries"), orderBy("date", "desc"));
     onSnapshot(q, (snapshot) => {
       document.getElementById("entries").innerHTML = "";
       snapshot.forEach(doc => displayEntry(doc.data()));
     });
-  </script></body>
+  </script>
+</body>
 </html>
