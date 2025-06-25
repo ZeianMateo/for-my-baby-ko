@@ -31,17 +31,31 @@
     .btn:hover {
       background-color: #ec407a;
     }
-    img {
-      margin-top: 10px;
-      max-width: 100%;
-      border-radius: 10px;
-    }
     .images {
       display: flex;
       flex-wrap: wrap;
       gap: 10px;
       justify-content: center;
       margin-top: 20px;
+    }
+    .image-card {
+      position: relative;
+    }
+    .image-card img {
+      max-width: 200px;
+      border-radius: 10px;
+    }
+    .delete-btn {
+      position: absolute;
+      top: 6px;
+      right: 6px;
+      background: rgba(255, 0, 0, 0.8);
+      color: white;
+      border: none;
+      border-radius: 50%;
+      width: 24px;
+      height: 24px;
+      cursor: pointer;
     }
     a {
       display: inline-block;
@@ -59,21 +73,61 @@
   <div class="images" id="gallery"></div>
   <a href="index.html" class="btn">← Back to Diary</a>
 
-  <script>
-    function addImage() {
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-app.js";
+    import { getFirestore, collection, addDoc, onSnapshot, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyCFRosG2qX4V7-Q-L3K_kc0f1-N8MVE3js",
+      authDomain: "virtual-diary-48315.firebaseapp.com",
+      projectId: "virtual-diary-48315",
+      storageBucket: "virtual-diary-48315.appspot.com",
+      messagingSenderId: "1061903300547",
+      appId: "1:1061903300547:web:3353b4504768f9cece2f76",
+      measurementId: "G-3SLZEGH16W"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    async function addImage() {
       const file = document.getElementById("upload").files[0];
       if (!file) return;
+
       const reader = new FileReader();
-      reader.onload = function (e) {
-        const imgHTML = `<img src="${e.target.result}" width="200">`;
-        document.getElementById("gallery").insertAdjacentHTML("beforeend", imgHTML);
-        localStorage.setItem("galleryImages", document.getElementById("gallery").innerHTML);
+      reader.onload = async function (e) {
+        const imageData = e.target.result;
+        await addDoc(collection(db, "galleryImages"), {
+          image: imageData,
+          timestamp: new Date().toISOString()
+        });
+        document.getElementById("upload").value = "";
       };
       reader.readAsDataURL(file);
     }
-    window.onload = function () {
-      document.getElementById("gallery").innerHTML = localStorage.getItem("galleryImages") || "";
+
+    function displayImage(id, imageData) {
+      const container = document.getElementById("gallery");
+      const div = document.createElement("div");
+      div.className = "image-card";
+      div.innerHTML = `
+        <img src="${imageData}">
+        <button class="delete-btn" onclick="deleteImage('${id}')">×</button>
+      `;
+      container.appendChild(div);
+    }
+
+    window.deleteImage = async function(id) {
+      await deleteDoc(doc(db, "galleryImages", id));
     };
+
+    onSnapshot(collection(db, "galleryImages"), (snapshot) => {
+      const container = document.getElementById("gallery");
+      container.innerHTML = "";
+      snapshot.forEach(doc => {
+        displayImage(doc.id, doc.data().image);
+      });
+    });
   </script>
 </body>
 </html>
