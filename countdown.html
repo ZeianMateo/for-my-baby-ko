@@ -31,33 +31,115 @@
       font-size: 14px;
       text-decoration: none;
     }
+    canvas {
+      position: fixed;
+      pointer-events: none;
+      top: 0;
+      left: 0;
+      z-index: 999;
+    }
   </style>
 </head>
 <body>
-  <h1>⏳ Countdown to our 1st Anniversary - May 21, 2026</h1>
-  <div id="countdown"></div>
+  <h1>⏳ Countdown to our 1st Anniversary (May 21, 2026)</h1>
+  <div id="countdown">Loading...</div>
   <a href="index.html" class="back-btn">← Back to Diary</a>
+  <canvas id="confetti"></canvas>
 
-  <script>
-    const targetDate = new Date("May 21, " + (new Date().getMonth() >= 4 ? new Date().getFullYear() + 1 : new Date().getFullYear()) + " 00:00:00").getTime();
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-app.js";
+    import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyCFRosG2qX4V7-Q-L3K_kc0f1-N8MVE3js",
+      authDomain: "virtual-diary-48315.firebaseapp.com",
+      projectId: "virtual-diary-48315",
+      storageBucket: "virtual-diary-48315.appspot.com",
+      messagingSenderId: "1061903300547",
+      appId: "1:1061903300547:web:3353b4504768f9cece2f76",
+      measurementId: "G-3SLZEGH16W"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
     const countdown = document.getElementById("countdown");
+    const confettiCanvas = document.getElementById("confetti");
+    let confettiShown = false;
 
-    function updateCountdown() {
-      const now = new Date().getTime();
-      const distance = targetDate - now;
-      if (distance < 0) {
-        countdown.innerHTML = "🎉 Happy Monthsary!";
-        return;
+    async function getOrSetTargetDate() {
+      const ref = doc(db, "settings", "countdownDate");
+      const snap = await getDoc(ref);
+      if (snap.exists()) {
+        return new Date(snap.data().date);
+      } else {
+        const defaultDate = new Date("2026-05-21T00:00:00");
+        await setDoc(ref, { date: defaultDate.toISOString() });
+        return defaultDate;
       }
-      const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-      const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-      const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-      const seconds = Math.floor((distance % (1000 * 60)) / 1000);
-      countdown.innerHTML = `${days}d ${hours}h ${minutes}m ${seconds}s`;
     }
 
-    setInterval(updateCountdown, 1000);
-    updateCountdown();
+    function updateCountdown(targetDate) {
+      const interval = setInterval(() => {
+        const now = new Date().getTime();
+        const distance = targetDate.getTime() - now;
+
+        if (distance <= 0) {
+          countdown.innerHTML = "🎉 Happy Anniversary!";
+          if (!confettiShown) {
+            startConfetti();
+            confettiShown = true;
+          }
+          clearInterval(interval);
+          return;
+        }
+
+        const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+        countdown.innerHTML = `${days}d ${hours}h ${minutes}m ${seconds}s`;
+      }, 1000);
+    }
+
+    // Confetti FX
+    function startConfetti() {
+      const ctx = confettiCanvas.getContext("2d");
+      confettiCanvas.width = window.innerWidth;
+      confettiCanvas.height = window.innerHeight;
+      const confetti = Array.from({ length: 150 }, () => ({
+        x: Math.random() * window.innerWidth,
+        y: Math.random() * window.innerHeight - window.innerHeight,
+        r: Math.random() * 6 + 4,
+        d: Math.random() * 20 + 10,
+        color: `hsl(${Math.random() * 360}, 100%, 70%)`,
+        tilt: Math.random() * 10 - 5
+      }));
+
+      function draw() {
+        ctx.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height);
+        confetti.forEach(c => {
+          ctx.beginPath();
+          ctx.arc(c.x, c.y, c.r, 0, Math.PI * 2);
+          ctx.fillStyle = c.color;
+          ctx.fill();
+        });
+        update();
+      }
+
+      function update() {
+        confetti.forEach(c => {
+          c.y += c.d * 0.1;
+          c.x += Math.sin(c.tilt) * 0.5;
+          c.tilt += 0.1;
+          if (c.y > confettiCanvas.height) c.y = -10;
+        });
+      }
+
+      setInterval(draw, 16);
+    }
+
+    getOrSetTargetDate().then(updateCountdown);
   </script>
 </body>
 </html>
